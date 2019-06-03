@@ -34,6 +34,7 @@ public class RESTHandler {
 
             @Override
             public void onFailure(Call<Visitor> call, Throwable t) {
+                Log.d("xx", "onResponse: " + t.getMessage());
 //                 Toast.makeText(MainActivity.class, "xx", Toast.LENGTH_LONG);
             }
         });
