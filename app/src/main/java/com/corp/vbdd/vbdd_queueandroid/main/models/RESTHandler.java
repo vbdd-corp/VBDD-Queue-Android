@@ -3,7 +3,12 @@ package com.corp.vbdd.vbdd_queueandroid.main.models;
 import android.app.Activity;
 import android.content.Context;
 import android.widget.TextView;
+
 import com.corp.vbdd.vbdd_queueandroid.R;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +51,27 @@ public class RESTHandler {
         });
     }
 
+    public ArrayList<Queue> getQueuesList() {
+
+        ArrayList<Queue> queues = new ArrayList<>();
+
+        Call<List<Queue>> call = queueService.getQueuesList();
+        call.enqueue(new Callback<List<Queue>>() {
+
+            @Override
+            public void onResponse(Call<List<Queue>> call, Response<List<Queue>> response) {
+                if (response.body() != null) {
+                    queues.addAll(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Queue>> call, Throwable t) {
+            }
+        });
+        return queues;
+    }
+
     public void previousPerson(Integer queueId) {
         Call<Visitor> call = queueService.previousPerson(queueId);
         call.enqueue(new Callback<Visitor>() {
@@ -65,7 +91,6 @@ public class RESTHandler {
             }
         });
     }
-
 
     private void setInformation(String information) {
         TextView txtView = (TextView) ((Activity) context).findViewById(R.id.mainInformation);

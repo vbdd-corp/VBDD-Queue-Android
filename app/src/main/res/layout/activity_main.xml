@@ -8,33 +8,33 @@
 
     <TextView
         android:id="@+id/mainInformation"
-        android:layout_width="272dp"
-        android:layout_height="95dp"
-        android:text="Hello World!"
+        android:layout_width="375dp"
+        android:layout_height="85dp"
+        android:text="@string/informations_about_the_queue_s_will_be_available_here"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.598"
+        app:layout_constraintHorizontal_bias="0.555"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.187" />
+        app:layout_constraintVertical_bias="0.164" />
 
     <Button
         android:id="@+id/nextBtn"
-        android:layout_width="176dp"
+        android:layout_width="179dp"
         android:layout_height="47dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="212dp"
+        android:layout_marginBottom="80dp"
         android:text="@string/next_person"
-        android:textSize="20sp"
+        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
+        app:layout_constraintHorizontal_bias="0.042"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:layout_constraintVertical_bias="0.461" />
+        app:layout_constraintTop_toBottomOf="@+id/mainInformation"
+        app:layout_constraintVertical_bias="0.072" />
 
     <Button
         android:id="@+id/previousBtn"
@@ -47,28 +47,54 @@
         android:text="@string/previous_person"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.539"
+        app:layout_constraintHorizontal_bias="0.042"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nextBtn"
-        app:layout_constraintVertical_bias="0.138" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/queueId"
-        android:layout_width="270dp"
-        android:layout_height="44dp"
+        android:layout_width="366dp"
+        android:layout_height="42dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:ems="10"
-        android:hint="Please enter the queue id"
+        android:hint="@string/please_enter_the_queue_id"
         android:inputType="number"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintBottom_toTopOf="@+id/mainInformation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.602"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.801" />
+
+    <Button
+        android:id="@+id/nextPersonBecauseAFK"
+        android:layout_width="169dp"
+        android:layout_height="99dp"
+        android:layout_marginStart="172dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/next_person_because_s_he_was_not_present"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.964"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="179dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="376dp"
+        android:layout_height="224dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/previousBtn" />
 
 </android.support.constraint.ConstraintLayout>
