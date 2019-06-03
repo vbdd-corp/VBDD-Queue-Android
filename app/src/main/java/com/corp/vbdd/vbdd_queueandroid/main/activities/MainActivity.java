@@ -22,5 +22,6 @@ public class MainActivity extends AppCompatActivity {
         EditText queueId = findViewById(R.id.queueId);
 
         nextButton.setOnClickListener(click -> this.restHandler.nextPerson(Integer.valueOf(queueId.getText().toString())));
+
     }
 }

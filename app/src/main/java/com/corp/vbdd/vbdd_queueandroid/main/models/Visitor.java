@@ -1,6 +1,9 @@
 package com.corp.vbdd.vbdd_queueandroid.main.models;
+import com.google.gson.annotations.SerializedName;
 
 public class Visitor  {
+
+    @SerializedName("id")
     private Integer visitorId;
 
     public Integer getId() {

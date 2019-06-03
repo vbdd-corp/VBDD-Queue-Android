@@ -14,6 +14,6 @@ public interface QueueService {
 
 
     @PUT("/api/queues/{queueId}/next-visitor")
-    Call nextPerson(@Path("queueId") Integer queueId);
+    Call<Visitor> nextPerson(@Path("queueId") Integer queueId);
 
 }
