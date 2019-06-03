@@ -19,8 +19,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button nextButton = findViewById(R.id.nextBtn);
+        Button prevButton = findViewById(R.id.previousBtn);
         EditText queueId = findViewById(R.id.queueId);
 
         nextButton.setOnClickListener(click -> this.restHandler.nextPerson(Integer.valueOf(queueId.getText().toString())));
+        // prevButton.setOnClickListener(click -> this.restHandler.previousPerson(Integer.valueOf(queueId.getText().toString())));
     }
 }
