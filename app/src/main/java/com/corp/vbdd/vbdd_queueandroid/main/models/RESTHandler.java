@@ -1,8 +1,11 @@
 package com.corp.vbdd.vbdd_queueandroid.main.models;
 
-import android.util.Log;
-import android.widget.Toast;
+import android.app.Activity;
+import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
 
+import com.corp.vbdd.vbdd_queueandroid.R;
 import com.corp.vbdd.vbdd_queueandroid.main.activities.MainActivity;
 
 import retrofit2.Call;
@@ -14,9 +17,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RESTHandler {
 
     private static final String __BACK_URL__ = "http://" + Config.__IP_ADDRESS__ + ":9428";
+    private final Context context;
     private QueueService queueService;
 
-    public RESTHandler() {
+    public RESTHandler(Context context) {
+
+        this.context = context;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(__BACK_URL__)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -27,15 +33,46 @@ public class RESTHandler {
     public void nextPerson(Integer queueId) {
         Call<Visitor> call = queueService.nextPerson(queueId);
         call.enqueue(new Callback<Visitor>() {
+
             @Override
             public void onResponse(Call<Visitor> call, Response<Visitor> response) {
-                Log.d("xx", "onResponse: " + response.body());
+                if (response.code() == 404) {
+                    setInformation("Their is nobody left in the queue");
+                } else {
+                    setInformation("" + response.message());
+                }
             }
 
             @Override
             public void onFailure(Call<Visitor> call, Throwable t) {
-//                 Toast.makeText(MainActivity.class, "xx", Toast.LENGTH_LONG);
+                setInformation("Failed to send request... Maybe timeout ?");
             }
         });
-     }
+    }
+
+    public void previousPerson(Integer queueId) {
+        Call<Visitor> call = queueService.previousPerson(queueId);
+        call.enqueue(new Callback<Visitor>() {
+
+            @Override
+            public void onResponse(Call<Visitor> call, Response<Visitor> response) {
+                if (response.code() == 404) {
+                    setInformation("Their is nobody left in the queue");
+                } else {
+                    setInformation("" + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Visitor> call, Throwable t) {
+                setInformation("Failed to send request... Maybe timeout ?");
+            }
+        });
+    }
+
+
+    private void setInformation(String information) {
+        TextView txtView = ((Activity) context).findViewById(R.id.mainInformation);
+        txtView.setText(information);
+    }
 }

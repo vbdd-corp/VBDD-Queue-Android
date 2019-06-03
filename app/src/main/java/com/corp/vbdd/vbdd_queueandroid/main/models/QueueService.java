@@ -12,8 +12,11 @@ public interface QueueService {
     @GET("/api/queues")
     Call<List<Queue>> getQueuesList();
 
-
     @PUT("/api/queues/{queueId}/next-visitor")
     Call<Visitor> nextPerson(@Path("queueId") Integer queueId);
+
+    @PUT("/api/queues/{queueId}/previous-visitor")
+    Call<Visitor> previousPerson(@Path("queueId") Integer queueId);
+
 
 }
