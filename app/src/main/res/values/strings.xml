@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">VBDD-Queue Android</string>
+    <string name="next_person">Next person</string>
 </resources>
