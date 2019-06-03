@@ -2,12 +2,8 @@ package com.corp.vbdd.vbdd_queueandroid.main.models;
 
 import android.app.Activity;
 import android.content.Context;
-import android.view.View;
 import android.widget.TextView;
-
 import com.corp.vbdd.vbdd_queueandroid.R;
-import com.corp.vbdd.vbdd_queueandroid.main.activities.MainActivity;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +35,7 @@ public class RESTHandler {
                 if (response.code() == 404) {
                     setInformation("Their is nobody left in the queue");
                 } else {
-                    setInformation("" + response.message());
+                    setInformation("Nexted ! The next person's id is : " + response.body().getId());
                 }
             }
 
@@ -59,7 +55,7 @@ public class RESTHandler {
                 if (response.code() == 404) {
                     setInformation("Their is nobody left in the queue");
                 } else {
-                    setInformation("" + response.message());
+                    setInformation("Previoused ! The previous person's id was (and is) : " + response.body().getId());
                 }
             }
 
@@ -72,7 +68,7 @@ public class RESTHandler {
 
 
     private void setInformation(String information) {
-        TextView txtView = ((Activity) context).findViewById(R.id.mainInformation);
+        TextView txtView = (TextView) ((Activity) context).findViewById(R.id.mainInformation);
         txtView.setText(information);
     }
 }
