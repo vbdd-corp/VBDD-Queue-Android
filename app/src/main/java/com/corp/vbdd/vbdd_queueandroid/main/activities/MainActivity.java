@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     TextView mainInformationText;
     TextView queueConnectedText;
     TextView lblRemaining;
+    TextView remainConstant;
     EditText queueIdEditText;
 
     LinearLayout connectedLayout;
@@ -64,31 +65,32 @@ public class MainActivity extends AppCompatActivity {
         mainInformationText = findViewById(R.id.mainInformation);
         queueConnectedText = findViewById(R.id.queueConnectedText);
         lblRemaining = findViewById(R.id.lblRemaining);
+        remainConstant = findViewById(R.id.textView);
         connectedLayout = findViewById(R.id.connectedLayout);
         notConnectedLayout = findViewById(R.id.notConnectedLayout);
 
         restHandler = new RESTHandler(MainActivity.this);
 
-           nextButton.setOnClickListener(click -> {
+        nextButton.setOnClickListener(click -> {
             this.restHandler.nextPerson(queueId, strategyId);
-            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+            this.restHandler.updateRemainingPersons(queueId);
         });
 
         prevButton.setOnClickListener(click -> {
             this.restHandler.previousPerson(queueId);
-            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+            this.restHandler.updateRemainingPersons(queueId);
         });
 
         nextPersonBecauseAFK.setOnClickListener(click -> {
             this.restHandler.absentPerson(queueId);
-            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+            this.restHandler.updateRemainingPersons(queueId);
         });
 
         connexionButton.setOnClickListener(click -> logIn());
         logOutBtn.setOnClickListener(click -> logOut());
 
-        strategy1Radio.setOnClickListener( click -> this.strategyId = 1);
-        strategy2Radio.setOnClickListener( click -> this.strategyId = 2);
+        strategy1Radio.setOnClickListener(click -> this.strategyId = 1);
+        strategy2Radio.setOnClickListener(click -> this.strategyId = 2);
 
         recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -97,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
         initialize();
     }
 
-    public void fillRecyclerView(List<Queue> queueArray){
+
+    public void fillRecyclerView(List<Queue> queueArray) {
         MyAdapter adapter = new MyAdapter(queueArray);
         recyclerView.setAdapter(adapter);
     }
@@ -109,15 +112,20 @@ public class MainActivity extends AppCompatActivity {
         strategy1Radio.setChecked(true);
         strategyId = 1;
 
+        remainConstant.setVisibility(View.INVISIBLE);
+        lblRemaining.setVisibility(View.INVISIBLE);
+
+
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
         nextPersonBecauseAFK.setEnabled(false);
-        lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+        this.restHandler.updateRemainingPersons(queueId);
     }
 
-    private void logIn(){
+    private void logIn() {
         queueId = Integer.valueOf(queueIdEditText.getText().toString());
         this.restHandler.getQueue(queueId);
+
     }
 
     public void logInSucess() {
@@ -129,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
         nextButton.setEnabled(true);
         prevButton.setEnabled(true);
         nextPersonBecauseAFK.setEnabled(true);
-
+        remainConstant.setVisibility(View.VISIBLE);
+        lblRemaining.setVisibility(View.VISIBLE);
         // hide keyboard
         try {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -141,10 +150,15 @@ public class MainActivity extends AppCompatActivity {
     private void logOut() {
         connectedLayout.setVisibility(View.INVISIBLE);
         notConnectedLayout.setVisibility(View.VISIBLE);
-
+        remainConstant.setVisibility(View.INVISIBLE);
+        lblRemaining.setVisibility(View.INVISIBLE);
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
+
         nextPersonBecauseAFK.setEnabled(false);
     }
 
+    public void setRemainingPersons(Integer body) {
+        lblRemaining.setText(String.valueOf(body));
+    }
 }

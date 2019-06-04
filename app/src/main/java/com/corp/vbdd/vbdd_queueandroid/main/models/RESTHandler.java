@@ -2,14 +2,11 @@ package com.corp.vbdd.vbdd_queueandroid.main.models;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.TextView;
 
 import com.corp.vbdd.vbdd_queueandroid.R;
 import com.corp.vbdd.vbdd_queueandroid.main.activities.MainActivity;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -23,7 +20,6 @@ public class RESTHandler {
     private static final String __BACK_URL__ = "http://" + Config.__IP_ADDRESS__ + ":9428";
     private final Context context;
     private QueueService queueService;
-    private int remaining;
 
     public RESTHandler(Context context) {
 
@@ -135,20 +131,20 @@ public class RESTHandler {
     }
 
     private void setInformation(String information) {
-        TextView txtView = (TextView) ((Activity) context).findViewById(R.id.mainInformation);
+        TextView txtView = ((Activity) context).findViewById(R.id.mainInformation);
         txtView.setText(information);
     }
 
-    public int getNumberPersonsRemaining(int queueId) {
+    public void updateRemainingPersons(int queueId) {
         Call<Integer> call = queueService.getRemainingPerson(queueId);
         call.enqueue(new Callback<Integer>() {
 
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.code() == 404) {
-                    remaining = 0;
+                    ((MainActivity) context).setRemainingPersons(0);
                 } else {
-                    remaining = response.body();
+                    ((MainActivity) context).setRemainingPersons(response.body());
                 }
             }
 
@@ -157,8 +153,5 @@ public class RESTHandler {
                 setInformation("Failed to send request... Maybe timeout ?  (previousPerson())");
             }
         });
-
-        return remaining;
-
     }
 }
