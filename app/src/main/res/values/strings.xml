@@ -8,4 +8,7 @@
     <string name="log_in">Log In</string>
     <string name="log_out">Log Out</string>
     <string name="queue_connected">You are connected to the queue : %1$d</string>
+    <string name="strategy_applied">Strategy applied :</string>
+    <string name="late_pass_in_between">Late pass in between</string>
+    <string name="late_pass_last">Late pass last</string>
 </resources>
