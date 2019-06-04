@@ -42,4 +42,19 @@ public class Queue {
         this.currentVisitor = currentVisitor;
         return this;
     }
+
+    @Override
+    public String toString(){
+        StringBuilder s = new StringBuilder();
+        ArrayList<Integer> visitors = new ArrayList<>();
+        visitors = getVisitorsIds();
+
+        s.append("Queue "+queueId+" :");
+        for (Integer visitor: visitors ) {
+            s.append(visitor+" ");
+        }
+        s.append("\n");
+
+        return s.toString();
+    }
 }
