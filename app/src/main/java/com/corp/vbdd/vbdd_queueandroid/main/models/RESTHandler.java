@@ -5,6 +5,7 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.corp.vbdd.vbdd_queueandroid.R;
+import com.corp.vbdd.vbdd_queueandroid.main.activities.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,27 @@ public class RESTHandler {
         this.queueService = retrofit.create(QueueService.class);
     }
 
+    public void getQueue(Integer queueId) {
+        Call<Queue> call = queueService.getQueue(queueId);
+        call.enqueue(new Callback<Queue>() {
+
+            @Override
+            public void onResponse(Call<Queue> call, Response<Queue> response) {
+                if (response.code() == 404) {
+                    setInformation("This queue does not exist !");
+                } else {
+                    setInformation("");
+                    ((MainActivity) context).logInSucess();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Queue> call, Throwable t) {
+                setInformation("Failed to send request... Maybe timeout ?");
+            }
+        });
+    }
+
     public void nextPerson(Integer queueId) {
         Call<Visitor> call = queueService.nextPerson(queueId);
         call.enqueue(new Callback<Visitor>() {
@@ -38,7 +60,7 @@ public class RESTHandler {
             @Override
             public void onResponse(Call<Visitor> call, Response<Visitor> response) {
                 if (response.code() == 404) {
-                    setInformation("Their is nobody left in the queue");
+                    setInformation("There is nobody left in the queue");
                 } else {
                     setInformation("Nexted ! The next person's id is : " + response.body().getId());
                 }
@@ -79,7 +101,7 @@ public class RESTHandler {
             @Override
             public void onResponse(Call<Visitor> call, Response<Visitor> response) {
                 if (response.code() == 404) {
-                    setInformation("Their is nobody left in the queue");
+                    setInformation("There is nobody left in the queue");
                 } else {
                     setInformation("Previoused ! The previous person's id was (and is) : " + response.body().getId());
                 }
