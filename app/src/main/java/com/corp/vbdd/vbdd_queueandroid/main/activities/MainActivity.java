@@ -71,20 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
         restHandler = new RESTHandler(MainActivity.this);
 
-        nextButton.setOnClickListener(click -> {
-            this.restHandler.nextPerson(queueId, strategyId);
-            this.restHandler.updateRemainingPersons(queueId);
-        });
+        nextButton.setOnClickListener(click -> this.restHandler.nextPerson(queueId, strategyId));
 
-        prevButton.setOnClickListener(click -> {
-            this.restHandler.previousPerson(queueId);
-            this.restHandler.updateRemainingPersons(queueId);
-        });
+        prevButton.setOnClickListener(click -> this.restHandler.previousPerson(queueId));
 
-        nextPersonBecauseAFK.setOnClickListener(click -> {
-            this.restHandler.absentPerson(queueId);
-            this.restHandler.updateRemainingPersons(queueId);
-        });
+        nextPersonBecauseAFK.setOnClickListener(click -> this.restHandler.absentPerson(queueId));
 
         connexionButton.setOnClickListener(click -> logIn());
         logOutBtn.setOnClickListener(click -> logOut());

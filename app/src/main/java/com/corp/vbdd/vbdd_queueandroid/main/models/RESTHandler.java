@@ -63,6 +63,7 @@ public class RESTHandler {
                 } else {
                     setInformation("Nexted ! The next person's id is : " + response.body().getId());
                 }
+                updateRemainingPersons(queueId);
             }
 
             @Override
@@ -101,6 +102,7 @@ public class RESTHandler {
                 } else {
                     setInformation("Previoused ! The previous person's id was (and is) : " + response.body().getId());
                 }
+                updateRemainingPersons(queueId);
             }
 
             @Override
@@ -121,6 +123,7 @@ public class RESTHandler {
                 } else {
                     setInformation("Previoused ! The previous person's id was (and is) : " + response.body().getId());
                 }
+                updateRemainingPersons(queueId);
             }
 
             @Override
