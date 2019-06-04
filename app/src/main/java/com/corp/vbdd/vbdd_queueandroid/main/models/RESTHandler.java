@@ -53,8 +53,8 @@ public class RESTHandler {
         });
     }
 
-    public void nextPerson(Integer queueId) {
-        Call<Visitor> call = queueService.nextPerson(queueId);
+    public void nextPerson(Integer queueId, Integer strategyId) {
+        Call<Visitor> call = queueService.nextPerson(queueId, strategyId);
         call.enqueue(new Callback<Visitor>() {
 
             @Override
@@ -95,6 +95,26 @@ public class RESTHandler {
     }
 
     public void previousPerson(Integer queueId) {
+        Call<Visitor> call = queueService.previousPerson(queueId);
+        call.enqueue(new Callback<Visitor>() {
+
+            @Override
+            public void onResponse(Call<Visitor> call, Response<Visitor> response) {
+                if (response.code() == 404) {
+                    setInformation("There is nobody left in the queue");
+                } else {
+                    setInformation("Previoused ! The previous person's id was (and is) : " + response.body().getId());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Visitor> call, Throwable t) {
+                setInformation("Failed to send request... Maybe timeout ?");
+            }
+        });
+    }
+
+    public void absentPerson(int queueId) {
         Call<Visitor> call = queueService.previousPerson(queueId);
         call.enqueue(new Callback<Visitor>() {
 

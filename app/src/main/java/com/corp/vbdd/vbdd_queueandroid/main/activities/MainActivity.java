@@ -7,6 +7,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.corp.vbdd.vbdd_queueandroid.R;
@@ -27,8 +28,13 @@ public class MainActivity extends AppCompatActivity {
     EditText queueIdEditText;
 
     LinearLayout connectedLayout;
+    LinearLayout notConnectedLayout;
+
+    RadioButton strategy1Radio;
+    RadioButton strategy2Radio;
 
     int queueId;
+    int strategyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +48,25 @@ public class MainActivity extends AppCompatActivity {
         nextPersonBecauseAFK = findViewById(R.id.nextPersonBecauseAFK);
         logOutBtn = findViewById(R.id.logOutBtn);
 
+        strategy1Radio = findViewById(R.id.strategy1);
+        strategy2Radio = findViewById(R.id.strategy2);
+
         queueIdEditText = findViewById(R.id.queueId);
         mainInformationText = findViewById(R.id.mainInformation);
         queueConnectedText = findViewById(R.id.queueConnectedText);
         connectedLayout = findViewById(R.id.connectedLayout);
+        notConnectedLayout = findViewById(R.id.notConnectedLayout);
 
         restHandler = new RESTHandler(MainActivity.this);
 
-        nextButton.setOnClickListener(click -> this.restHandler.nextPerson(queueId));
+        nextButton.setOnClickListener(click -> this.restHandler.nextPerson(queueId, strategyId));
         prevButton.setOnClickListener(click -> this.restHandler.previousPerson(queueId));
+        nextPersonBecauseAFK.setOnClickListener(click -> this.restHandler.absentPerson(queueId));
         connexionButton.setOnClickListener(click -> logIn());
         logOutBtn.setOnClickListener(click -> logOut());
+
+        strategy1Radio.setOnClickListener( click -> this.strategyId = 1);
+        strategy2Radio.setOnClickListener( click -> this.strategyId = 2);
 
         initialize();
     }
@@ -61,24 +75,22 @@ public class MainActivity extends AppCompatActivity {
         connexionButton.setVisibility(View.VISIBLE);
         connectedLayout.setVisibility(View.INVISIBLE);
 
+        strategy1Radio.setChecked(true);
+        strategyId = 1;
+
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
         nextPersonBecauseAFK.setEnabled(false);
     }
 
     private void logIn(){
-
-        // TODO: Verify if the queue exist in back-end
-
         queueId = Integer.valueOf(queueIdEditText.getText().toString());
         this.restHandler.getQueue(queueId);
     }
 
     public void logInSucess(){
         connectedLayout.setVisibility(View.VISIBLE);
-        mainInformationText.setVisibility(View.VISIBLE);
-        connexionButton.setVisibility(View.INVISIBLE);
-        queueIdEditText.setVisibility(View.INVISIBLE);
+        notConnectedLayout.setVisibility(View.INVISIBLE);
 
         queueConnectedText.setText(getResources().getString(R.string.queue_connected, queueId));
 
@@ -97,9 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void logOut() {
         connectedLayout.setVisibility(View.INVISIBLE);
-        mainInformationText.setVisibility(View.INVISIBLE);
-        connexionButton.setVisibility(View.VISIBLE);
-        queueIdEditText.setVisibility(View.VISIBLE);
+        notConnectedLayout.setVisibility(View.VISIBLE);
 
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);

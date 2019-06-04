@@ -4,7 +4,7 @@
     <string name="previous_person">Previous person</string>
     <string name="informations_about_the_queue_s_will_be_available_here">Informations about the queue(s) will be available here</string>
     <string name="please_enter_the_queue_id">Please enter the queue id</string>
-    <string name="next_person_because_s_he_was_not_present">Next person (because (s)he was not present)</string>
+    <string name="next_person_because_s_he_was_not_present">Late/Absent person</string>
     <string name="log_in">Log In</string>
     <string name="log_out">Log Out</string>
     <string name="queue_connected">You are connected to the queue : %1$d</string>
