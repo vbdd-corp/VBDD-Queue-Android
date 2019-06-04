@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView mainInformationText;
     TextView queueConnectedText;
+    TextView lblRemaining;
     EditText queueIdEditText;
 
     LinearLayout connectedLayout;
@@ -48,16 +49,30 @@ public class MainActivity extends AppCompatActivity {
         queueIdEditText = findViewById(R.id.queueId);
         mainInformationText = findViewById(R.id.mainInformation);
         queueConnectedText = findViewById(R.id.queueConnectedText);
+        lblRemaining = findViewById(R.id.lblRemaining);
         connectedLayout = findViewById(R.id.connectedLayout);
 
         restHandler = new RESTHandler(MainActivity.this);
 
-        nextButton.setOnClickListener(click -> this.restHandler.nextPerson(queueId));
-        prevButton.setOnClickListener(click -> this.restHandler.previousPerson(queueId));
+        nextButton.setOnClickListener(click -> {
+            this.restHandler.nextPerson(queueId);
+            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+        });
+
+        prevButton.setOnClickListener(click -> {
+            this.restHandler.previousPerson(queueId);
+            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+        });
+
+        nextPersonBecauseAFK.setOnClickListener(click -> {
+            this.restHandler.nextPersonBecauseAFK(queueId);
+            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+        });
+
         connexionButton.setOnClickListener(click -> logIn());
         logOutBtn.setOnClickListener(click -> logOut());
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         MyAdapter adapter = new MyAdapter(restHandler.getQueuesList());
         recyclerView.setAdapter(adapter);
@@ -65,16 +80,17 @@ public class MainActivity extends AppCompatActivity {
         initialize();
     }
 
-    private void initialize(){
+    private void initialize() {
         connexionButton.setVisibility(View.VISIBLE);
         connectedLayout.setVisibility(View.INVISIBLE);
 
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
         nextPersonBecauseAFK.setEnabled(false);
+        lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
     }
 
-    private void logIn(){
+    private void logIn() {
 
         // TODO: Verify if the queue exist in back-end
 
@@ -82,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         this.restHandler.getQueue(queueId);
     }
 
-    public void logInSucess(){
+    public void logInSucess() {
         connectedLayout.setVisibility(View.VISIBLE);
         mainInformationText.setVisibility(View.VISIBLE);
         connexionButton.setVisibility(View.INVISIBLE);
@@ -96,10 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
         // hide keyboard
         try {
-            InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        } catch (Exception e) {
-
+        } catch (Exception ignored) {
         }
     }
 

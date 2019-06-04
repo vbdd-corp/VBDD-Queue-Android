@@ -25,15 +25,15 @@
 
     <TextView
         android:id="@+id/mainInformation"
-        android:layout_width="wrap_content"
-        android:layout_height="85dp"
+        android:layout_width="389dp"
+        android:layout_height="60dp"
         android:text="@string/informations_about_the_queue_s_will_be_available_here"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/connectedLayout"
-        app:layout_constraintVertical_bias="0.164" />
+        app:layout_constraintVertical_bias="0.082" />
 
     <Button
         android:id="@+id/connexionBtn"
@@ -87,19 +87,19 @@
         app:layout_constraintTop_toBottomOf="@+id/nextBtn" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="376dp"
-        android:layout_height="224dp"
+        android:id="@+id/recycleView"
+        android:layout_width="397dp"
+        android:layout_height="315dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/previousBtn"
-        app:layout_constraintVertical_bias="0.355" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <LinearLayout
         android:id="@+id/connectedLayout"
@@ -127,10 +127,36 @@
             android:id="@+id/logOutBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/log_out"
+             android:text="@string/log_out"
             android:textAlignment="center"
             android:gravity="center"/>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="Number of persons remaining : "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.153"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/previousBtn" />
+
+    <TextView
+        android:id="@+id/lblRemaining"
+        android:layout_width="63dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.296"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/previousBtn" />
 
 </android.support.constraint.ConstraintLayout>

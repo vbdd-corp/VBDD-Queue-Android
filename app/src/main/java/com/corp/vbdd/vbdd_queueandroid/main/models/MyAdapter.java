@@ -11,7 +11,7 @@ import com.corp.vbdd.vbdd_queueandroid.R;
 
 import java.util.ArrayList;
 
-class MyAdapter extends  RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class MyAdapter extends  RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private ArrayList<Queue> queues = new ArrayList<>();
     public MyAdapter(ArrayList<Queue> qz){
         queues =qz;
