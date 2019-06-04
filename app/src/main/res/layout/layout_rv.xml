@@ -16,8 +16,8 @@
 
         <TextView
             android:id="@+id/qID"
-            android:layout_width="66dp"
-            android:layout_height="18dp"
+            android:layout_width="67dp"
+            android:layout_height="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="5"
@@ -31,7 +31,7 @@
         <TextView
             android:id="@+id/queueInfos3"
             android:layout_width="103dp"
-            android:layout_height="19dp"
+            android:layout_height="16dp"
             android:text="Current visitor : "
             android:textAlignment="center"
             android:textSize="14sp"
@@ -56,7 +56,7 @@
             android:id="@+id/queueInfos4"
             android:layout_width="88dp"
             android:layout_height="17dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="Visitors : "
             android:textAlignment="center"
@@ -68,10 +68,9 @@
             android:id="@+id/qVisitors"
             android:layout_width="281dp"
             android:layout_height="17dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:text="3, 5, 6, 2, 1"
-            android:textAlignment="center"
+            android:textAlignment="viewStart"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/queueInfos4"
             app:layout_constraintTop_toTopOf="parent" />
@@ -79,7 +78,7 @@
         <TextView
             android:id="@+id/qCurrentVisitor"
             android:layout_width="66dp"
-            android:layout_height="18dp"
+            android:layout_height="16dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="3"
