@@ -14,7 +14,10 @@ import android.widget.TextView;
 
 import com.corp.vbdd.vbdd_queueandroid.R;
 import com.corp.vbdd.vbdd_queueandroid.main.models.MyAdapter;
+import com.corp.vbdd.vbdd_queueandroid.main.models.Queue;
 import com.corp.vbdd.vbdd_queueandroid.main.models.RESTHandler;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     RadioButton strategy1Radio;
     RadioButton strategy2Radio;
+
+    RecyclerView recyclerView;
 
     int queueId;
     int strategyId;
@@ -75,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         nextPersonBecauseAFK.setOnClickListener(click -> {
-            this.restHandler.nextPersonBecauseAFK(queueId);
+            this.restHandler.absentPerson(queueId);
             lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
         });
 
@@ -85,12 +90,16 @@ public class MainActivity extends AppCompatActivity {
         strategy1Radio.setOnClickListener( click -> this.strategyId = 1);
         strategy2Radio.setOnClickListener( click -> this.strategyId = 2);
 
-        RecyclerView recyclerView = findViewById(R.id.recycleView);
+        recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MyAdapter adapter = new MyAdapter(restHandler.getQueuesList());
-        recyclerView.setAdapter(adapter);
+        restHandler.getQueuesList(); // will call fillRecyclerView after back's response
 
         initialize();
+    }
+
+    public void fillRecyclerView(List<Queue> queueArray){
+        MyAdapter adapter = new MyAdapter(queueArray);
+        recyclerView.setAdapter(adapter);
     }
 
     private void initialize() {

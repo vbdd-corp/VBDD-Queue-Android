@@ -76,17 +76,14 @@ public class RESTHandler {
         });
     }
 
-    public ArrayList<Queue> getQueuesList() {
-
-        ArrayList<Queue> queues = new ArrayList<>();
-
+    public void getQueuesList() {
         Call<List<Queue>> call = queueService.getQueuesList();
         call.enqueue(new Callback<List<Queue>>() {
 
             @Override
             public void onResponse(Call<List<Queue>> call, Response<List<Queue>> response) {
                 if (response.body() != null) {
-                    queues.addAll(response.body());
+                    ((MainActivity) context).fillRecyclerView(response.body());
                 }
             }
 
@@ -95,7 +92,6 @@ public class RESTHandler {
                 setInformation("Failed to send request... Maybe timeout ?  (getQueuesList())");
             }
         });
-        return queues;
     }
 
     public void previousPerson(Integer queueId) {
@@ -143,20 +139,6 @@ public class RESTHandler {
         txtView.setText(information);
     }
 
-    public void fillQueuesInformations() {
-        ArrayList<Queue> queues = new ArrayList<>();
-        queues = getQueuesList();
-        StringBuilder listOfQueues = new StringBuilder();
-        if (queues != null) {
-            for (Queue queue : queues) {
-                listOfQueues.append(queue.toString());
-            }
-
-        } else {
-            listOfQueues.append("There is no queue !");
-        }
-    }
-
     public int getNumberPersonsRemaining(int queueId) {
         Call<Integer> call = queueService.getRemainingPerson(queueId);
         call.enqueue(new Callback<Integer>() {
@@ -178,9 +160,5 @@ public class RESTHandler {
 
         return remaining;
 
-    }
-
-    public void nextPersonBecauseAFK(int queueId) {
-        //TODO : Implémenter ça
     }
 }

@@ -9,11 +9,12 @@ import android.widget.TextView;
 import com.corp.vbdd.vbdd_queueandroid.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private ArrayList<Queue> queues;
+    private List<Queue> queues;
 
-    public MyAdapter(ArrayList<Queue> qz) {
+    public MyAdapter(List<Queue> qz) {
         queues = qz;
 
     }
