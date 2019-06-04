@@ -2,6 +2,8 @@ package com.corp.vbdd.vbdd_queueandroid.main.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -10,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.corp.vbdd.vbdd_queueandroid.R;
+import com.corp.vbdd.vbdd_queueandroid.main.models.MyAdapter;
 import com.corp.vbdd.vbdd_queueandroid.main.models.RESTHandler;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         prevButton.setOnClickListener(click -> this.restHandler.previousPerson(queueId));
         connexionButton.setOnClickListener(click -> logIn());
         logOutBtn.setOnClickListener(click -> logOut());
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        MyAdapter adapter = new MyAdapter(restHandler.getQueuesList());
+        recyclerView.setAdapter(adapter);
 
         initialize();
     }
