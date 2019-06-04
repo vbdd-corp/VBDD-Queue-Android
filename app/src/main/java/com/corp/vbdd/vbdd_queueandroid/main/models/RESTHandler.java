@@ -96,4 +96,22 @@ public class RESTHandler {
         TextView txtView = (TextView) ((Activity) context).findViewById(R.id.mainInformation);
         txtView.setText(information);
     }
+
+    public void fillQueuesInformations(){
+        ArrayList<Queue> queues = new ArrayList<>();
+        queues = getQueuesList();
+        StringBuilder listOfQueues = new StringBuilder();
+        if(queues!=null){
+            for (Queue queue: queues){
+                listOfQueues.append(queue.toString());
+            }
+
+        }else{
+            listOfQueues.append("There is no queue !");
+        }
+
+        /*SET VIEW INFORMATIONS*/
+
+
+    }
 }
