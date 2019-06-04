@@ -2,11 +2,13 @@ package com.corp.vbdd.vbdd_queueandroid.main.models;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.TextView;
 
 import com.corp.vbdd.vbdd_queueandroid.R;
 import com.corp.vbdd.vbdd_queueandroid.main.activities.MainActivity;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class RESTHandler {
     private static final String __BACK_URL__ = "http://" + Config.__IP_ADDRESS__ + ":9428";
     private final Context context;
     private QueueService queueService;
+    private int remaining;
 
     public RESTHandler(Context context) {
 
@@ -48,7 +51,7 @@ public class RESTHandler {
 
             @Override
             public void onFailure(Call<Queue> call, Throwable t) {
-                setInformation("Failed to send request... Maybe timeout ?");
+                setInformation("Failed to send request... Maybe timeout ? (getQueue())");
             }
         });
     }
@@ -68,7 +71,7 @@ public class RESTHandler {
 
             @Override
             public void onFailure(Call<Visitor> call, Throwable t) {
-                setInformation("Failed to send request... Maybe timeout ?");
+                setInformation("Failed to send request... Maybe timeout ? (nextPerson())");
             }
         });
     }
@@ -89,6 +92,7 @@ public class RESTHandler {
 
             @Override
             public void onFailure(Call<List<Queue>> call, Throwable t) {
+                setInformation("Failed to send request... Maybe timeout ?  (getQueuesList())");
             }
         });
         return queues;
@@ -109,7 +113,7 @@ public class RESTHandler {
 
             @Override
             public void onFailure(Call<Visitor> call, Throwable t) {
-                setInformation("Failed to send request... Maybe timeout ?");
+                setInformation("Failed to send request... Maybe timeout ?  (previousPerson())");
             }
         });
     }
@@ -139,21 +143,44 @@ public class RESTHandler {
         txtView.setText(information);
     }
 
-    public void fillQueuesInformations(){
+    public void fillQueuesInformations() {
         ArrayList<Queue> queues = new ArrayList<>();
         queues = getQueuesList();
         StringBuilder listOfQueues = new StringBuilder();
-        if(queues!=null){
-            for (Queue queue: queues){
+        if (queues != null) {
+            for (Queue queue : queues) {
                 listOfQueues.append(queue.toString());
             }
 
-        }else{
+        } else {
             listOfQueues.append("There is no queue !");
         }
+    }
 
-        /*SET VIEW INFORMATIONS*/
+    public int getNumberPersonsRemaining(int queueId) {
+        Call<Integer> call = queueService.getRemainingPerson(queueId);
+        call.enqueue(new Callback<Integer>() {
 
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.code() == 404) {
+                    remaining = 0;
+                } else {
+                    remaining = response.body();
+                }
+            }
 
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                setInformation("Failed to send request... Maybe timeout ?  (previousPerson())");
+            }
+        });
+
+        return remaining;
+
+    }
+
+    public void nextPersonBecauseAFK(int queueId) {
+        //TODO : Implémenter ça
     }
 }

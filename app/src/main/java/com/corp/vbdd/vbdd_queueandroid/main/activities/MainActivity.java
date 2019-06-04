@@ -2,6 +2,8 @@ package com.corp.vbdd.vbdd_queueandroid.main.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -11,6 +13,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.corp.vbdd.vbdd_queueandroid.R;
+import com.corp.vbdd.vbdd_queueandroid.main.models.MyAdapter;
 import com.corp.vbdd.vbdd_queueandroid.main.models.RESTHandler;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView mainInformationText;
     TextView queueConnectedText;
+    TextView lblRemaining;
     EditText queueIdEditText;
 
     LinearLayout connectedLayout;
@@ -54,24 +58,42 @@ public class MainActivity extends AppCompatActivity {
         queueIdEditText = findViewById(R.id.queueId);
         mainInformationText = findViewById(R.id.mainInformation);
         queueConnectedText = findViewById(R.id.queueConnectedText);
+        lblRemaining = findViewById(R.id.lblRemaining);
         connectedLayout = findViewById(R.id.connectedLayout);
         notConnectedLayout = findViewById(R.id.notConnectedLayout);
 
         restHandler = new RESTHandler(MainActivity.this);
 
-        nextButton.setOnClickListener(click -> this.restHandler.nextPerson(queueId, strategyId));
-        prevButton.setOnClickListener(click -> this.restHandler.previousPerson(queueId));
-        nextPersonBecauseAFK.setOnClickListener(click -> this.restHandler.absentPerson(queueId));
+           nextButton.setOnClickListener(click -> {
+            this.restHandler.nextPerson(queueId, strategyId);
+            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+        });
+
+        prevButton.setOnClickListener(click -> {
+            this.restHandler.previousPerson(queueId);
+            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+        });
+
+        nextPersonBecauseAFK.setOnClickListener(click -> {
+            this.restHandler.nextPersonBecauseAFK(queueId);
+            lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
+        });
+
         connexionButton.setOnClickListener(click -> logIn());
         logOutBtn.setOnClickListener(click -> logOut());
 
         strategy1Radio.setOnClickListener( click -> this.strategyId = 1);
         strategy2Radio.setOnClickListener( click -> this.strategyId = 2);
 
+        RecyclerView recyclerView = findViewById(R.id.recycleView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        MyAdapter adapter = new MyAdapter(restHandler.getQueuesList());
+        recyclerView.setAdapter(adapter);
+
         initialize();
     }
 
-    private void initialize(){
+    private void initialize() {
         connexionButton.setVisibility(View.VISIBLE);
         connectedLayout.setVisibility(View.INVISIBLE);
 
@@ -81,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
         nextPersonBecauseAFK.setEnabled(false);
+        lblRemaining.setText(String.valueOf(this.restHandler.getNumberPersonsRemaining(queueId)));
     }
 
     private void logIn(){
@@ -88,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         this.restHandler.getQueue(queueId);
     }
 
-    public void logInSucess(){
+    public void logInSucess() {
         connectedLayout.setVisibility(View.VISIBLE);
         notConnectedLayout.setVisibility(View.INVISIBLE);
 
@@ -100,10 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
         // hide keyboard
         try {
-            InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        } catch (Exception e) {
-
+        } catch (Exception ignored) {
         }
     }
 
