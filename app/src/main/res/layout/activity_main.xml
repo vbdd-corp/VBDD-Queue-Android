@@ -61,8 +61,8 @@
 
     <TextView
         android:id="@+id/mainInformation"
-        android:layout_width="wrap_content"
-        android:layout_height="85dp"
+        android:layout_width="362dp"
+        android:layout_height="30dp"
         android:text="@string/informations_about_the_queue_s_will_be_available_here"
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -111,18 +111,15 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
-        android:layout_width="397dp"
-        android:layout_height="315dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="358dp"
+        android:layout_height="196dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previousBtn"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.384" />
 
     <LinearLayout
         android:id="@+id/connectedLayout"
@@ -161,13 +158,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="Number of persons remaining : "
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.153"
+        app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previousBtn" />
+        tools:layout_editor_absoluteY="404dp" />
 
     <TextView
         android:id="@+id/lblRemaining"
@@ -176,10 +172,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="10"
+        app:layout_constraintBottom_toTopOf="@+id/recycleView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.296"
+        app:layout_constraintHorizontal_bias="0.216"
         app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/previousBtn" />
+        app:layout_constraintTop_toBottomOf="@+id/previousBtn"
+        app:layout_constraintVertical_bias="0.274" />
 
 </android.support.constraint.ConstraintLayout>

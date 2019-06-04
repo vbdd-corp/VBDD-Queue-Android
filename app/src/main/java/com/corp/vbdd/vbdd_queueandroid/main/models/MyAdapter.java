@@ -1,6 +1,5 @@
 package com.corp.vbdd.vbdd_queueandroid.main.models;
 
-import android.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +10,14 @@ import com.corp.vbdd.vbdd_queueandroid.R;
 
 import java.util.ArrayList;
 
-public class MyAdapter extends  RecyclerView.Adapter<MyAdapter.MyViewHolder> {
-    private ArrayList<Queue> queues = new ArrayList<>();
-    public MyAdapter(ArrayList<Queue> qz){
-        queues =qz;
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+    private ArrayList<Queue> queues;
+
+    public MyAdapter(ArrayList<Queue> qz) {
+        queues = qz;
+
     }
+
     @Override
     public int getItemCount() {
         return queues.size();
@@ -36,30 +38,21 @@ public class MyAdapter extends  RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private  TextView qInfos;
-
-        private Queue currentQueue;
+        private TextView qID;
+        private TextView qVisitors;
+        private TextView qCurrentVisitor;
 
         public MyViewHolder(final View itemView) {
             super(itemView);
-
-            qInfos = ((TextView) itemView.findViewById(R.id.queueInfos));
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new AlertDialog.Builder(itemView.getContext())
-                            .setTitle(currentQueue.getQueueId())
-                            .setMessage(currentQueue.toString())
-                            .show();
-                }
-            });
+            qID = itemView.findViewById(R.id.qID);
+            qVisitors = itemView.findViewById(R.id.qVisitors);
+            qCurrentVisitor = itemView.findViewById(R.id.qCurrentVisitor);
         }
 
         public void display(Queue queue) {
-            currentQueue = queue;
-            qInfos.setText(queue.toString());
+            qID.setText(String.valueOf(queue.getQueueId()));
+            qVisitors.setText(queue.toString());
+            qCurrentVisitor.setText(String.valueOf(queue.getCurrentVisitor()));
         }
     }
-
 }

@@ -20,41 +20,25 @@ public class Queue {
         return queueId;
     }
 
-    public Queue setQueueId(Integer queueId) {
-        this.queueId = queueId;
-        return this;
-    }
 
     public ArrayList<Integer> getVisitorsIds() {
         return visitorsIds;
     }
 
-    public Queue setVisitorsIds(ArrayList<Integer> visitorsIds) {
-        this.visitorsIds = visitorsIds;
-        return this;
-    }
 
     public Integer getCurrentVisitor() {
         return currentVisitor;
     }
 
-    public Queue setCurrentVisitor(Integer currentVisitor) {
-        this.currentVisitor = currentVisitor;
-        return this;
-    }
 
     @Override
-    public String toString(){
-        StringBuilder s = new StringBuilder();
-        ArrayList<Integer> visitors = new ArrayList<>();
-        visitors = getVisitorsIds();
-
-        s.append("Queue "+queueId+" :");
-        for (Integer visitor: visitors ) {
-            s.append(visitor+" ");
+    public String toString() {
+        StringBuilder toReturn = new StringBuilder();
+        for (Integer id : visitorsIds) {
+            toReturn.append(id).append(", ");
         }
-        s.append("\n");
 
-        return s.toString();
+        toReturn = new StringBuilder(toReturn.substring(0, toReturn.length() - 1).substring(0, toReturn.length() - 1));
+        return toReturn.toString();
     }
 }
