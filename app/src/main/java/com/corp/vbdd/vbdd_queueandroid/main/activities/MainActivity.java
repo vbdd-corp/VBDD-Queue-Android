@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void initialize(){
         connexionButton.setVisibility(View.VISIBLE);
-        mainInformationText.setVisibility(View.INVISIBLE);
         connectedLayout.setVisibility(View.INVISIBLE);
 
         nextButton.setEnabled(false);
@@ -72,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
         // TODO: Verify if the queue exist in back-end
 
         queueId = Integer.valueOf(queueIdEditText.getText().toString());
+        this.restHandler.getQueue(queueId);
+    }
+
+    public void logInSucess(){
         connectedLayout.setVisibility(View.VISIBLE);
         mainInformationText.setVisibility(View.VISIBLE);
         connexionButton.setVisibility(View.INVISIBLE);
@@ -90,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e) {
 
         }
-}
+    }
 
     private void logOut() {
         connectedLayout.setVisibility(View.INVISIBLE);
