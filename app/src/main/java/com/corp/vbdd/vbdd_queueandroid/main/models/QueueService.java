@@ -22,4 +22,7 @@ public interface QueueService {
 
     @PUT("/api/queues/{queueId}/previous-visitor")
     Call<Visitor> previousPerson(@Path("queueId") Integer queueId);
+
+    @PUT("/api/queues/{queueId}/absent-visitor")
+    Call<Visitor> absentPerson(@Path("queueId") Integer queueId);
 }

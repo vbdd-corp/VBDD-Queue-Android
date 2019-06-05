@@ -113,7 +113,7 @@ public class RESTHandler {
     }
 
     public void absentPerson(int queueId) {
-        Call<Visitor> call = queueService.previousPerson(queueId);
+        Call<Visitor> call = queueService.absentPerson(queueId);
         call.enqueue(new Callback<Visitor>() {
 
             @Override
@@ -121,7 +121,7 @@ public class RESTHandler {
                 if (response.code() == 404) {
                     setInformation("There is nobody left in the queue");
                 } else {
-                    setInformation("Previoused ! The previous person's id was (and is) : " + response.body().getId());
+                    setInformation("Absent ! Put in late list : " + response.body().getId());
                 }
                 updateRemainingPersons(queueId);
             }
