@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import com.corp.vbdd.vbdd_queueandroid.R;
 import com.corp.vbdd.vbdd_queueandroid.main.models.MyAdapter;
 import com.corp.vbdd.vbdd_queueandroid.main.models.Queue;
-import com.corp.vbdd.vbdd_queueandroid.main.models.RESTHandler;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -31,8 +29,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    RESTHandler restHandler;
 
     Button nextButton;
     Button prevButton;
@@ -83,15 +79,12 @@ public class MainActivity extends AppCompatActivity {
         connectedLayout = findViewById(R.id.connectedLayout);
         notConnectedLayout = findViewById(R.id.notConnectedLayout);
 
-        restHandler = new RESTHandler(MainActivity.this);
+//        nextButton.setOnClickListener(click -> this.restHandler.nextPerson(queueId, strategyId));
+//
+//        prevButton.setOnClickListener(click -> this.restHandler.previousPerson(queueId));
+//
+//        nextPersonBecauseAFK.setOnClickListener(click -> this.restHandler.absentPerson(queueId));
 
-        nextButton.setOnClickListener(click -> this.restHandler.nextPerson(queueId, strategyId));
-
-        prevButton.setOnClickListener(click -> this.restHandler.previousPerson(queueId));
-
-        nextPersonBecauseAFK.setOnClickListener(click -> this.restHandler.absentPerson(queueId));
-
-        connexionButton.setOnClickListener(click -> logIn());
         logOutBtn.setOnClickListener(click -> logOut());
 
         strategy1Radio.setOnClickListener(click -> this.strategyId = 1);
@@ -99,15 +92,88 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycleView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        restHandler.getQueuesList(); // will call fillRecyclerView after back's response
+        // restHandler.getQueuesList(); // will call fillRecyclerView after back's response
 
         initialize();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!client.isConnected())
+            MQTTConnect();
+    }
 
     public void fillRecyclerView(List<Queue> queueArray) {
         MyAdapter adapter = new MyAdapter(queueArray);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void MQTTConnect() {
+
+        String clientId = MqttClient.generateClientId();
+        client = new MqttAndroidClient(this.getApplicationContext(), "tcp://localhost:1883", clientId);
+        System.out.println("INITIALIZE");
+        try {
+            IMqttToken token = client.connect();
+            token.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    try {
+                        subscribeSuccess();
+                        client.subscribe("/log-in-queue", 2);
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+
+                    client.setCallback(new MqttCallback() {
+                        @Override
+                        public void connectionLost(Throwable throwable) {
+                            System.out.println("CONNECTION LOST");
+                        }
+
+                        @Override
+                        public void messageArrived(String topic, MqttMessage mqttMessage) {
+                            if(topic.equals("success")){
+                                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                                System.out.println("received : " + mqttMessage.toString());
+                            }
+                            else if(topic.equals("/log-in-queue")){
+                                Toast.makeText(getApplicationContext(), "Log in", Toast.LENGTH_SHORT).show();
+                                logInQueue(Integer.parseInt(mqttMessage.toString()));
+                            }
+//
+                        }
+
+                        @Override
+                        public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+                        }
+                    });
+
+                    System.out.println("CONNECTION SUCCESS");
+                    Toast.makeText(getApplicationContext(), "CONNECTED TO BROKER !", Toast.LENGTH_SHORT).show();
+
+                    connexionButton.setOnClickListener(e -> sendMqttRequest("/login", queueIdEditText.getText().toString()));
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Toast.makeText(getApplicationContext(), "DEAD DEAD", Toast.LENGTH_SHORT).show();
+                    System.out.println("CONNECTION FAILURE");
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMqttRequest(String topic, String msg){
+        try {
+            client.publish(topic, new MqttMessage(msg.getBytes()));
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initialize() {
@@ -124,58 +190,10 @@ public class MainActivity extends AppCompatActivity {
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
         nextPersonBecauseAFK.setEnabled(false);
-        this.restHandler.updateRemainingPersons(queueId);
+        // this.restHandler.updateRemainingPersons(queueId);
 
+        MQTTConnect();
 
-        String clientId = MqttClient.generateClientId();
-        client = new MqttAndroidClient(this.getApplicationContext(), "tcp://10.212.110.177:1883", clientId);
-        try {
-            IMqttToken token = client.connect();
-            token.setActionCallback(new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    try {
-                        subscribeSuccess();
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-
-                    client.setCallback(new MqttCallback() {
-                        @Override
-                        public void connectionLost(Throwable throwable) {
-                            Log.d("MQTT","CONNECTION LOST");
-                        }
-
-                        @Override
-                        public void messageArrived(String topic, MqttMessage mqttMessage) {
-                            if(topic.equals("success")){
-                                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
-                                Log.d("MQTT", "received : " + mqttMessage.toString());
-                            }
-//
-                        }
-
-                        @Override
-                        public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-
-                        }
-                    });
-
-                    Log.d("MQTT","CONNECTION SUCCESS");
-                    Toast.makeText(getApplicationContext(), "Connected successfully with node-red !", Toast.LENGTH_SHORT).show();
-
-//                  getRdv.setOnClickListener(e -> sendMqttRequest("queues/android/enqueue", "enqueue"));
-                }
-
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    Toast.makeText(getApplicationContext(), "DEAD DEAD", Toast.LENGTH_SHORT).show();
-                    Log.d("MQTT","CONNECTION FAILURE");
-                }
-            });
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
     }
 
     public void subscribeSuccess() throws MqttException {
@@ -183,22 +201,21 @@ public class MainActivity extends AppCompatActivity {
         token.setActionCallback(new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken iMqttToken) {
-                Log.d("MQTT", "Subscribe Successfully " + "success");
+                System.out.println("Subscribe Successfully " + "success");
             }
             @Override
             public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-                Log.e("MQTT", "Subscribe Failed " + "success");
+                System.out.println("Subscribe Failed " + "success");
             }
         });
     }
 
-    private void logIn() {
-        queueId = Integer.valueOf(queueIdEditText.getText().toString());
-        this.restHandler.getQueue(queueId);
-
+    public void subscribeLogToQueue() throws MqttException {
+        client.subscribe("success", 2);
     }
 
-    public void logInSucess() {
+
+    public void logInQueue(int queueId) {
         connectedLayout.setVisibility(View.VISIBLE);
         notConnectedLayout.setVisibility(View.INVISIBLE);
 
