@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -11,11 +12,21 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.corp.vbdd.vbdd_queueandroid.R;
 import com.corp.vbdd.vbdd_queueandroid.main.models.MyAdapter;
 import com.corp.vbdd.vbdd_queueandroid.main.models.Queue;
 import com.corp.vbdd.vbdd_queueandroid.main.models.RESTHandler;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.List;
 
@@ -45,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
     int queueId;
     int strategyId;
+
+    private MqttAndroidClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +125,71 @@ public class MainActivity extends AppCompatActivity {
         prevButton.setEnabled(false);
         nextPersonBecauseAFK.setEnabled(false);
         this.restHandler.updateRemainingPersons(queueId);
+
+
+        String clientId = MqttClient.generateClientId();
+        client = new MqttAndroidClient(this.getApplicationContext(), "tcp://10.212.110.177:1883", clientId);
+        try {
+            IMqttToken token = client.connect();
+            token.setActionCallback(new IMqttActionListener() {
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    try {
+                        subscribeSuccess();
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+
+                    client.setCallback(new MqttCallback() {
+                        @Override
+                        public void connectionLost(Throwable throwable) {
+                            Log.d("MQTT","CONNECTION LOST");
+                        }
+
+                        @Override
+                        public void messageArrived(String topic, MqttMessage mqttMessage) {
+                            if(topic.equals("success")){
+                                Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                                Log.d("MQTT", "received : " + mqttMessage.toString());
+                            }
+//
+                        }
+
+                        @Override
+                        public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+
+                        }
+                    });
+
+                    Log.d("MQTT","CONNECTION SUCCESS");
+                    Toast.makeText(getApplicationContext(), "Connected successfully with node-red !", Toast.LENGTH_SHORT).show();
+
+//                  getRdv.setOnClickListener(e -> sendMqttRequest("queues/android/enqueue", "enqueue"));
+                }
+
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                    Toast.makeText(getApplicationContext(), "DEAD DEAD", Toast.LENGTH_SHORT).show();
+                    Log.d("MQTT","CONNECTION FAILURE");
+                }
+            });
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void subscribeSuccess() throws MqttException {
+        IMqttToken token = client.subscribe("success", 2);
+        token.setActionCallback(new IMqttActionListener() {
+            @Override
+            public void onSuccess(IMqttToken iMqttToken) {
+                Log.d("MQTT", "Subscribe Successfully " + "success");
+            }
+            @Override
+            public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
+                Log.e("MQTT", "Subscribe Failed " + "success");
+            }
+        });
     }
 
     private void logIn() {
