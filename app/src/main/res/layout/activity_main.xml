@@ -63,7 +63,7 @@
         android:id="@+id/mainInformation"
         android:layout_width="362dp"
         android:layout_height="30dp"
-        android:text="@string/informations_about_the_queue_s_will_be_available_here"
+        android:textSize="35sp"
         android:textAlignment="center"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"

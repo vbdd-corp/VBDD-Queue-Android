@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         subscribeSuccess();
                         client.subscribe("/log-in-queue", 2);
+                        client.subscribe("/display-visitor", 2);
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
@@ -142,7 +143,15 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), "Log in", Toast.LENGTH_SHORT).show();
                                 logInQueue(Integer.parseInt(mqttMessage.toString()));
                             }
-//
+                            else if(topic.equals("/display-visitor")){
+                                Toast.makeText(getApplicationContext(), "Display visitor", Toast.LENGTH_SHORT).show();
+                                if(mqttMessage.toString().isEmpty()){
+                                    mainInformationText.setText("No student left in queue !");
+                                }
+                                else {
+                                    mainInformationText.setText(mqttMessage.toString());
+                                }
+                            }
                         }
 
                         @Override
@@ -154,7 +163,13 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("CONNECTION SUCCESS");
                     Toast.makeText(getApplicationContext(), "CONNECTED TO BROKER !", Toast.LENGTH_SHORT).show();
 
-                    connexionButton.setOnClickListener(e -> sendMqttRequest("/login", queueIdEditText.getText().toString()));
+                    connexionButton.setOnClickListener(e -> {
+                        sendMqttRequest("/login", "{ \"queueId\" : \""+queueIdEditText.getText().toString()+"\" }");
+                    });
+                    nextButton.setOnClickListener(e -> {
+                        sendMqttRequest("/queues/next-visitor", "{ \"queueId\" : \""+queueId+"\" , " +
+                                " \"strategyId\" : \""+strategyId+"\"}");
+                    });
                 }
 
                 @Override
@@ -216,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void logInQueue(int queueId) {
+        this.queueId = queueId;
+
         connectedLayout.setVisibility(View.VISIBLE);
         notConnectedLayout.setVisibility(View.INVISIBLE);
 
