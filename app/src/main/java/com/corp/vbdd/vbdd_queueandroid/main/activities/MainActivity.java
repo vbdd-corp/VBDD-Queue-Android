@@ -175,6 +175,9 @@ public class MainActivity extends AppCompatActivity {
                     prevButton.setOnClickListener(e -> {
                         sendMqttRequest("/queues/previous-visitor", "{ \"queueId\" : \""+queueId+"\"}");
                     });
+                    nextPersonBecauseAFK.setOnClickListener(e -> {
+                        sendMqttRequest("/queues/absent-visitor", "{ \"queueId\" : \""+queueId+"\"}");
+                    });
                 }
 
                 @Override
