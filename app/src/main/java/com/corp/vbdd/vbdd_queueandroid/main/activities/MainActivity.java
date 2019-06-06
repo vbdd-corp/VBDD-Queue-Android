@@ -79,12 +79,6 @@ public class MainActivity extends AppCompatActivity {
         connectedLayout = findViewById(R.id.connectedLayout);
         notConnectedLayout = findViewById(R.id.notConnectedLayout);
 
-//        nextButton.setOnClickListener(click -> this.restHandler.nextPerson(queueId, strategyId));
-//
-//        prevButton.setOnClickListener(click -> this.restHandler.previousPerson(queueId));
-//
-//        nextPersonBecauseAFK.setOnClickListener(click -> this.restHandler.absentPerson(queueId));
-
         logOutBtn.setOnClickListener(click -> logOut());
 
         strategy1Radio.setOnClickListener(click -> this.strategyId = 1);
@@ -123,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         subscribeSuccess();
                         client.subscribe("/log-in-queue", 2);
                         client.subscribe("/display-visitor", 2);
+                        client.subscribe("/display-remaining-visitor", 2);
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
@@ -151,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
                                 else {
                                     mainInformationText.setText(mqttMessage.toString());
                                 }
+                            }
+                            else if(topic.equals("/display-remaining-visitor")){
+                                setRemainingPersons(Integer.parseInt(mqttMessage.toString()));
                             }
                         }
 
