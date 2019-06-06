@@ -25,7 +25,11 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -118,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         client.subscribe("/log-in-queue", 2);
                         client.subscribe("/display-visitor", 2);
                         client.subscribe("/display-remaining-visitor", 2);
+                        client.subscribe("/display-queue-list", 2);
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
@@ -150,6 +155,11 @@ public class MainActivity extends AppCompatActivity {
                             else if(topic.equals("/display-remaining-visitor")){
                                 setRemainingPersons(Integer.parseInt(mqttMessage.toString()));
                             }
+                            else if(topic.equals("/display-queue-list")){
+                                Toast.makeText(getApplicationContext(), "display queue list", Toast.LENGTH_SHORT).show();
+                                List<Queue> queues = getQueueListFromJSON(mqttMessage.toString());
+                                fillRecyclerView(queues);
+                            }
                         }
 
                         //TODO : griser bouton next lorsque plus d'étudiant et griser bouton previous quand personne avant.
@@ -176,6 +186,9 @@ public class MainActivity extends AppCompatActivity {
                     nextPersonBecauseAFK.setOnClickListener(e -> {
                         sendMqttRequest("/queues/absent-visitor", "{ \"queueId\" : \""+queueId+"\"}");
                     });
+
+                    sendMqttRequest("/queues/refresh-queue-list", "");
+
                 }
 
                 @Override
@@ -187,6 +200,44 @@ public class MainActivity extends AppCompatActivity {
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<Queue> getQueueListFromJSON(String str) {
+        List<Queue> list = new ArrayList<>();
+        try {
+            JSONArray jsonArray = new JSONArray(str);
+            if (jsonArray != null) {
+                int len = jsonArray.length();
+                for (int i=0;i<len;i++){
+                    Queue queue = new Queue();
+                    JSONObject object = new JSONObject(jsonArray.get(i).toString());
+                    queue.setId(object.getInt("id"));
+                    queue.setCurrentIndex(object.getInt("currentIndex"));
+
+                    List<Integer> visitorsIds = getVisitorsIdsListFromJSONObject(object);
+                    queue.setVisitorsIds(visitorsIds);
+
+                    list.add(queue);
+                }
+            }
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    private List<Integer> getVisitorsIdsListFromJSONObject(JSONObject object) throws JSONException {
+        JSONArray visitorsIdsJSON = object.getJSONArray("visitorsIds");
+        List<Integer> visitorsIds = new ArrayList<>();
+        if (visitorsIdsJSON != null) {
+            int visitorsIdsLen = visitorsIdsJSON.length();
+            for (int j=0;j<visitorsIdsLen;j++){
+                visitorsIds.add(Integer.parseInt(visitorsIdsJSON.get(j).toString()));
+            }
+        }
+        return visitorsIds;
     }
 
     public void sendMqttRequest(String topic, String msg){

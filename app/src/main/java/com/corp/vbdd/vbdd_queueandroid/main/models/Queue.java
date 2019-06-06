@@ -3,6 +3,7 @@ package com.corp.vbdd.vbdd_queueandroid.main.models;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Queue {
 
@@ -10,7 +11,7 @@ public class Queue {
     private Integer queueId;
 
     @SerializedName("visitorsIds")
-    private ArrayList<Integer> visitorsIds;
+    private List<Integer> visitorsIds;
 
 
     @SerializedName("currentIndex")
@@ -21,7 +22,7 @@ public class Queue {
     }
 
 
-    public ArrayList<Integer> getVisitorsIds() {
+    public List<Integer> getVisitorsIds() {
         return visitorsIds;
     }
 
@@ -40,5 +41,17 @@ public class Queue {
 
         toReturn = new StringBuilder(toReturn.substring(0, toReturn.length() - 1).substring(0, toReturn.length() - 1));
         return toReturn.toString();
+    }
+
+    public void setId(int id) {
+        this.queueId = id;
+    }
+
+    public void setCurrentIndex(int currentIndex) {
+        this.currentVisitor = currentIndex;
+    }
+
+    public void setVisitorsIds(List<Integer> visitorsIds) {
+        this.visitorsIds = visitorsIds;
     }
 }
