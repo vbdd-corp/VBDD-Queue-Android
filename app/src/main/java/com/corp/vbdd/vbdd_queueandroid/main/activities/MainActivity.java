@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                         client.subscribe("/display-visitor", 2);
                         client.subscribe("/display-remaining-visitor", 2);
                         client.subscribe("/display-queue-list", 2);
+                        client.subscribe("/display-message", 2);
                     } catch (MqttException e) {
                         e.printStackTrace();
                     }
@@ -154,6 +155,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                             else if(topic.equals("/display-remaining-visitor")){
                                 setRemainingPersons(Integer.parseInt(mqttMessage.toString()));
+                            }
+                            else if(topic.equals("/display-message")){
+                                mainInformationText.setText(mqttMessage.toString());
                             }
                             else if(topic.equals("/display-queue-list")){
                                 Toast.makeText(getApplicationContext(), "display queue list", Toast.LENGTH_SHORT).show();
@@ -290,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
     public void logInQueue(int queueId) {
         this.queueId = queueId;
 
+        mainInformationText.setText("");
         connectedLayout.setVisibility(View.VISIBLE);
         notConnectedLayout.setVisibility(View.INVISIBLE);
 
@@ -313,6 +318,9 @@ public class MainActivity extends AppCompatActivity {
         notConnectedLayout.setVisibility(View.VISIBLE);
         remainConstant.setVisibility(View.INVISIBLE);
         lblRemaining.setVisibility(View.INVISIBLE);
+
+        mainInformationText.setText("");
+
         nextButton.setEnabled(false);
         prevButton.setEnabled(false);
 
