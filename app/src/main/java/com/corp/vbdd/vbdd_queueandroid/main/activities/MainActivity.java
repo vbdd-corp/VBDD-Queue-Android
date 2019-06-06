@@ -154,6 +154,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
+                        //TODO : griser bouton next lorsque plus d'étudiant et griser bouton previous quand personne avant.
+
                         @Override
                         public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
 
@@ -169,6 +171,9 @@ public class MainActivity extends AppCompatActivity {
                     nextButton.setOnClickListener(e -> {
                         sendMqttRequest("/queues/next-visitor", "{ \"queueId\" : \""+queueId+"\" , " +
                                 " \"strategyId\" : \""+strategyId+"\"}");
+                    });
+                    prevButton.setOnClickListener(e -> {
+                        sendMqttRequest("/queues/previous-visitor", "{ \"queueId\" : \""+queueId+"\"}");
                     });
                 }
 
