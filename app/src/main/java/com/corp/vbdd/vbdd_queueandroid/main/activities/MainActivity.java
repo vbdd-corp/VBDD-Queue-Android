@@ -166,8 +166,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
 
-                        //TODO : griser bouton next lorsque plus d'étudiant et griser bouton previous quand personne avant.
-
                         @Override
                         public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
 
